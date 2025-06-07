@@ -1,10 +1,12 @@
-from flask import Blueprint
-app = Blueprint("general", __name__)
-@app.route('/')
-def hello_world():
+from flask import Flask, Blueprint
+
+# تعریف Blueprint
+general = Blueprint("general", __name__)
+
+@general.route('/')
+def home():
     return 'this is main page'
 
-
-@app.route('/about')
+@general.route('/about')
 def about():
     return 'about us'

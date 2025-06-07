@@ -1,16 +1,17 @@
-<!doctype html>
-<html lang="fa">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>login admin</title>
-</head>
-<body>
-<h1>admin login</h1>
-<form action="#" method="post">
-    <input type="text" name="username" placeholder="username"><br>
-    <input type="password" name="password" placeholder="password"><br>
-    <input type="submit"><br>
-</form>
-</body>
-</html>
+{% extends 'base.html' %}
+{% block header %}
+<title>admin login</title>
+
+{% endblock %}
+{% block body %}
+   <h1>admin login</h1>
+   <form action="{{url_for('admin.login') }}" method="post">
+
+     <input type="text" name="username" placeholder="username"><br>
+     <input type="password" name="password" placeholder="password"><br>
+     <input type="submit"><br>
+   </form>
+
+
+{% endblock %}
+

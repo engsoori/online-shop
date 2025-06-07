@@ -1,1 +1,5 @@
-SQLALCHEMY_DATABASE_URI="sqlite:///database.db"
+import os
+basedir = os.path.abspath(os.path.dirname(__file__))
+SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(basedir, "database.db")
+ADMIN_USERNAME="admin"
+ADMIN_PASSWORD="1234"
