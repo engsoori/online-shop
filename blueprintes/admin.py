@@ -53,3 +53,17 @@ def products():
 
         return "done"
 
+@app.route('/admin/dashboard/edit-product/<int:id>', methods=['GET', 'POST'])
+def edit_product(id):
+    product = Product.query.filter_by(id=id).first_or_404()
+
+    if request.method == "POST":
+        product.name = request.form.get('name')
+        product.description = request.form.get('description')
+        product.price = request.form.get('price')
+        product.active = 1 if request.form.get('active') else 0
+
+        db.session.commit()
+        return redirect(url_for('admin.products'))  # یا هر صفحه‌ای که لیست محصولات رو نشون میده
+
+    return render_template("admin/edit-product.html", product=product)
