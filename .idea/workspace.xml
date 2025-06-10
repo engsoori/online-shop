@@ -7,11 +7,12 @@
     <list default="true" id="f0a4849e-a2c5-45a9-b68d-2dc0b922195a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blueprintes/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/blueprintes/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blueprintes/general.py" beforeDir="false" afterPath="$PROJECT_DIR$/blueprintes/general.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database.db" beforeDir="false" afterPath="$PROJECT_DIR$/database.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/admin/edit-product.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/admin/edit-product.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/admin/products.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/admin/products.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/instance/database.db" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/cover/1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/cover/2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/cover/3.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/cover/4.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/cover/5.jpg" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
