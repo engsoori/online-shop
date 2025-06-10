@@ -8,8 +8,12 @@ general = Blueprint("general", __name__)
 
 @general.route('/')
 def main():
-    products=Product.query.all()
+    products=Product.query.filter(Product.active==1).all()
     return render_template('main.html',products=products)
+@general.route('/product/<int:id>/<name>')
+def product(id,name):
+    product=Product.query.filter(Product.id==id).filter(Product.name==name).filter(Product.active==1).first_or_404()
+    return render_template('product.html',product=product)
 
 @general.route('/about')
 def about():
