@@ -24,8 +24,11 @@ def login():
            return redirect(url_for("admin.dashboard"))
    else:
     return render_template('admin/login.html')
+@app.route('/product/<int:id>/<name>')
+def product(id,name):
+    product = Product.query.filter_by(id=id, name=name).first_or_404()
 
-
+    return render_template('admin/product.html', product=product)
 @app.route('/admin/dashboard')
 def dashboard():
            return render_template("admin/dashboard.html")
@@ -41,7 +44,7 @@ def products():
         description = request.form.get('description',None)
         price = request.form.get('price',None)
         active = request.form.get('active',None)
-
+        file = request.files.get('cover',None)
         p=Product(name=name,description=description,price=price)
         if active== None:
            p.active = 0
@@ -51,6 +54,7 @@ def products():
         db.session.add(p)
         db.session.commit()
 
+        file.save(f'static/cover/{p.id}.jpg')
         return "done"
 
 @app.route('/admin/dashboard/edit-product/<int:id>', methods=['GET', 'POST'])
@@ -61,9 +65,12 @@ def edit_product(id):
         product.name = request.form.get('name')
         product.description = request.form.get('description')
         product.price = request.form.get('price')
+        file = request.files.get('cover', None)
         product.active = 1 if request.form.get('active') else 0
 
         db.session.commit()
+        if file != None:
+            file.save(f'static/cover/{product.id}.jpg')
         return redirect(url_for('admin.products'))  # یا هر صفحه‌ای که لیست محصولات رو نشون میده
 
     return render_template("admin/edit-product.html", product=product)
