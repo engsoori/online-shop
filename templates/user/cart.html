@@ -1,5 +1,15 @@
 {% extends 'base.html' %}
+{% block header %}
+<title>سبد خرید کاربر</title>
+
+{% endblock %}
 {% block body %}
-<h1>داشبورد کاربر</h1>
-<p>خوش آمدید {{ current_user.username }}</p>
+
+      {% for cart_item in ( current_user.carts|selectattr('status','equalto', 'pending')|list|first).cart_items %}
+          {{ cart_item.product.name }},{{ cart_item.quantity }},{{cart_item.product.price}}
+           <form action="/remove-from-cart" method="get">
+               <input type="hidden" name="id" value="cart_item.id">
+               <input type="submit" value="حذف">
+           </form>
+      {% endfor %}
 {% endblock %}

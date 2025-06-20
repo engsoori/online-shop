@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_wtf.csrf import CSRFProtect
-from flask import Blueprint, render_template, request, redirect, url_for, session
+from flask import Blueprint, render_template, request, redirect, url_for, session,flash
 from blueprintes.admin import app as admin
 from blueprintes.general import  general
 from blueprintes.user import user
@@ -27,10 +27,16 @@ login_manager.init_app(app)
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+
+@login_manager.unauthorized_handler
+def unauthorized():
+    flash('وارد حساب کاربریتان شوید')
+    return redirect(url_for('user.login'))
+
+
 with app.app_context():
     extensions.db.create_all()
 
-
-
 if __name__ == '__main__':
     app.run(debug=True)
+

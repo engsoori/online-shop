@@ -2,6 +2,10 @@ from flask import Blueprint, render_template,request,redirect,url_for,flash
 from passlib.hash import  sha256_crypt
 from flask_login import login_user ,current_user ,login_required
 from extensions import db
+from models import cart_item
+from models.cart import Cart
+from models.cart_item import CartItem
+from models.products import Product
 from models.user import User
 
 user = Blueprint("user", __name__)  # تغییر نام متغیر از app به user
@@ -58,7 +62,52 @@ def login():
         flash("درخواست نامعتبر.")
         return redirect(url_for('user.login'))
 
+
+@user.route('/add_to_cart',methods=['GET'])
+@login_required
+def add_to_cart():
+    id = request.args.get('id')
+    product=Product.query.filter(Product.id==id).first_or_404()
+    cart=current_user.carts.filter_by(Cart.status=='pending').first()
+    if cart == None:
+        cart = Cart()
+        current_user.carts.append(cart)
+
+        db.session.add(cart)
+
+
+    cart=cart.cart_item.filter_by(CartItem.Product==product.id).first()
+    if cart_item==None:
+
+      item = CartItem(quantity=1)
+      item.cart = cart
+      item.product = product
+      db.session.add(item)
+    else:
+        cart_item.quantity +=1
+        db.session.commit()
+    return redirect('/user/cart')
+
 @user.route('/user/dashboard')
 @login_required
 def dashboard():
     return render_template('user/dashboard.html')
+
+
+
+@user.route('/cart')
+@login_required
+def cart():
+    return render_template('user/cart.html')
+
+@user.route('/remove-from-cart',methods=['GET'])
+@login_required
+def remove_from_cart():
+    id = request.args.get('id')
+    cart_item=CartItem.query.filter(CartItem.id==id).first_or_404()
+    if cart_item.quantity>1:
+        cart_item.quantity-=1
+    else:
+       db.session.delete(cart_item)
+    db.session.commit()
+    return redirect('/user/cart')
