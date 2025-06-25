@@ -1,3 +1,4 @@
+import requests
 from flask import Blueprint, render_template,request,redirect,url_for,flash
 from passlib.hash import  sha256_crypt
 from flask_login import login_user ,current_user ,login_required
@@ -5,9 +6,10 @@ from extensions import db
 from models import cart_item
 from models.cart import Cart
 from models.cart_item import CartItem
+from models.payment import Payment
 from models.products import Product
 from models.user import User
-
+import config
 user = Blueprint("user", __name__)  # تغییر نام متغیر از app به user
 
 
@@ -111,3 +113,57 @@ def remove_from_cart():
        db.session.delete(cart_item)
     db.session.commit()
     return redirect('/user/cart')
+
+@user.route('/verify',methods=['GET'])
+@login_required
+def verify():
+    token = request.args.get('token')
+    pay=Payment.query.filter(Payment.token==token).first_or_404()
+
+    r=requests.post(config.PAYMEN_VERIFY_REQUEST_URL,
+            data={
+                'api':'sandbox',
+                'amount':pay.price,
+                'token':token
+            })
+    pay.status=bool(r.json()['success'])
+    if pay.status:
+
+       transaction_id=r.json()['result'][' transaction_id']
+       card_pan=r.json()['result']['card_pan']
+       refid=r.json()['result']['refid']
+
+
+       pay.card_pan=card_pan
+       pay.transaction_id=transaction_id
+       pay.refid=refid
+       pay.status='success'
+       pay.cart.status='paid'
+       flash("پرداخت موفق بود")
+    else:
+        flash("پرداخت با خطا مواجه شد")
+        pay.status='Failed'
+
+    db.session.commit()
+
+    return redirect(url_for('user.dashboard'))
+
+
+@user.route('/payment',methods=['GET'])
+@login_required
+def payment():
+   cart = current_user.carts.filter_by(Cart.status == 'pending').first()
+   r=requests.post(config.PAYMEN_FIRST_REQUEST_URL,
+            data={
+                'api':config.PAYMEN_MERCHANT,
+                'amount':cart.total_price(),
+                'callback':config.PAYMEN_CALLBACK,
+            })
+   token=r.json()['result']['token']
+   url=r.json()['result']['url']
+
+   pay=Payment(price=cart.total_price(),token=token)
+   pay.cart=cart
+   db.session.add(pay)
+   db.session.commit()
+   return redirect(url)
